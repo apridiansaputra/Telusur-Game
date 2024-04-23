@@ -3,7 +3,10 @@ import os
 
 class Character:
     def __init__(self):
-        self.player  = pygame.Rect(32, 32, 32, 32)
+        self.original_image = pygame.image.load("./assets/player.png")
+        self.image = pygame.transform.scale(self.original_image, (60,60))
+        self.player = self.image.get_rect()
+        self.player.topleft = (0, 0)
         self.has_key = False
 
     def movePlayer(self, dx, dy):
@@ -26,68 +29,77 @@ class Character:
         if not self.has_key:
             if self.player.left < 0:
                 self.player.left = 0
-            if self.player.right > 640:
-                self.player.right = 640
+            if self.player.right > 960:
+                self.player.right = 960
             if self.player.top < 0:
                 self.player.top = 0
-            if self.player.bottom > 480:
-                self.player.bottom = 480
+            if self.player.bottom > 720:
+                self.player.bottom = 720
 
     def move(self, dx, dy):
         self.player.x += dx
         self.player.y += dy
 
 class Wall:
-    def __init__(self, pos) :
+    def __init__(self, pos, desc) :
         walls.append(self)
-        self.shape = pygame.Rect(pos[0], pos[1], 32, 32)
+        if desc == "horizontal":
+            self.original_image = pygame.image.load("./assets/tembok-horizontal.png")
+        if desc == "vertikal":
+            self.original_image = pygame.image.load("./assets/tembok-vertikal.png")
+        self.image = pygame.transform.scale(self.original_image, (60,60))
+        self.shape = self.image.get_rect()
+        self.shape.topleft = pos
 
 class Key:
     def __init__(self, pos) :
-        self.rect = pygame.Rect(pos[0], pos[1], 32, 32)
+        self.original_image = pygame.image.load("./assets/kunci.png")
+        self.image = pygame.transform.scale(self.original_image, (60,60))
+        self.rect = self.image.get_rect()
+        self.rect.topleft = pos
         self.collect_key = False
-
 
 os.environ["SDL_VIDEO_CENTERED"] = "1"
 pygame.init()
 pygame.display.set_caption("Labirin PBO")
-screen = pygame.display.set_mode((640, 480))
+screen = pygame.display.set_mode((960, 720))
 
 clock   = pygame.time.Clock()
+print(type(clock))
 character  = Character()
 walls   = []
 keys    = []
+background = pygame.image.load("./assets/surface.png").convert()
 
 
 obstacle = [
-    "WWWWWWWWWWWWWWWWWWWW",
-    "W                K W",
-    "W       WWWWWW     W",
-    "W   WWWW       W   W",
-    "W   W        WWWW  W",
-    "W WWW  WWWW        W",
-    "W   W     W W      W",
-    "W   W     W   WWW WW",
-    "W   WWW WWW   W W  W",
-    "W     W   W   W W  W",
-    "WWW   W   WWWWW W  W",
-    "W W      WW        W",
-    "W W   WWWW   WWW   W",
-    "W      W   E   W   W",
-    "WWWWWWWWWWWWWWWWWWWW",
+    " HHHHHHHHHHHHHHV",
+    "             K V",
+    "V   HHHHHH     V",
+    "V              V",
+    "V              V",
+    "V HHV  HHHH    V",
+    "V   V       H  V",
+    "V   V     H    V",
+    "V   HHH HHH    V",
+    "V     H   H    H",
+    "V      H         E",
+    "VVVVVVVVVVVVVVVV",
 ]
 
 x = y = 0
 for row in obstacle:
     for col in row:
-        if col == "W":
-            Wall((x, y))
+        if col == "H":
+            Wall((x, y), "horizontal")
+        if col == "V":
+            Wall((x, y), "vertikal")
         if col == "E":
-            close_door = pygame.Rect(x, y, 32, 32)
+            close_door = pygame.Rect(x, y, 60, 60)
         if col == "K":
             keys.append(Key((x, y)))
-        x += 32
-    y += 32
+        x += 60
+    y += 60
     x = 0
 
 
@@ -119,17 +131,17 @@ while running:
     if character.has_key and character.player.colliderect(close_door):
         running = False
                                                               
-    screen.fill((0, 0, 0))
+    screen.blit(background, (0, 0))
 
     for wall in walls:
-        pygame.draw.rect(screen, (65, 176, 110), wall.shape)
+        screen.blit(wall.image, wall.shape)
 
     for key in keys:
         if not key.collect_key:
-            pygame.draw.rect(screen, (255, 196, 112), key.rect)
+            screen.blit(key.image, key.rect)
     
     pygame.draw.rect(screen, (81, 68, 52), close_door)
-    pygame.draw.rect(screen, (255, 112, 112), character.player)
+    screen.blit(character.image, character.player)
     pygame.display.flip()
     clock.tick(360)
 

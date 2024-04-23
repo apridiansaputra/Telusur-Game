@@ -1,0 +1,36 @@
+UML Class Diagram
+
+* Character : 
+- player = Rect
+- has_key = bool
+----------------
+- __init__()
+- movePlayer()
+- move()
+
+* Wall :
+- shape = Rect
+---------------
+- __init__()
+
+* Key :
+- rect = Rect
+- collect_key = bool
+-------------------
+- __init__()
+
+* Game :
+- screen = surface
+- clock  = list
+- walls = list
+- keys = list
+- character = Class
+- key = Class
+- wall = Class
+-------------------
+- __init__()
+- run()
+- level()
+- score()
+
+
