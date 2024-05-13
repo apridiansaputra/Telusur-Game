@@ -1,5 +1,5 @@
 # Telusur
-Preview gambar game Telusur
+![Homescreen](assets\MENU.gif)
 ## 📖Daftar Isi
 - [Deskripsi Game](#deskripsi-game)
 
@@ -35,7 +35,7 @@ coming soon
 coming soon
 
 ## 📖UML Class Diagram
-coming soon
+![UML](assets\UML.jpg)
 
 ## 👨🏽‍💻Kontributor
 | Nama | NIM | Peran |

@@ -9,13 +9,13 @@ class GameObject:
     def __init__(self, position, scale):
         self.rect = pygame.Rect(position[0], position[1], scale[0], scale[1])
 
-
 class Character(GameObject):
     def __init__(self, position=(50, 50)):
         super().__init__(position, (110, 110))
         self.original_image = pygame.image.load("./assets/palyer-1.png")
         self.image = pygame.transform.scale(self.original_image, self.rect.size)
         self.has_key = False
+        self.sound_manager = SoundManager()
 
     def move(self, dx, dy, walls, screen_width, screen_height, camera_x, camera_y):
         old_x, old_y = self.rect.x, self.rect.y
@@ -36,9 +36,9 @@ class Character(GameObject):
             if self.rect.colliderect(key.rect):
                 key.collected = True
                 self.has_key = True
+                self.sound_manager.play_key_pickup_sound()
                 keys.remove(key)
                 break
-
 
 class Wall(GameObject):
     def __init__(self, pos, desc):
@@ -50,14 +50,12 @@ class Wall(GameObject):
         self.original_image = pygame.image.load(image_path)
         self.image = pygame.transform.scale(self.original_image, self.rect.size)
 
-
 class Key(GameObject):
     def __init__(self,pos):
         super().__init__(pos, (60, 60))
         self.original_image = pygame.image.load("./assets/kunci.png")
         self.image = pygame.transform.scale(self.original_image, self.rect.size)
         self.collected = False
-
 
 class Door(GameObject):
     def __init__(self, pos):
@@ -66,9 +64,6 @@ class Door(GameObject):
 
     def draw(self, screen, camera_x, camera_y):
         pygame.draw.rect(screen, self.color, (self.rect.x - camera_x, self.rect.y - camera_y, self.rect.width, self.rect.height))
-
-
-import pygame
 
 class Screen:
     def __init__(self):
@@ -139,13 +134,55 @@ class Screen:
         timer_text = self.font_info.render(f"Waktu: {time_left}", True, (255, 255, 255))
         self.screen.blit(timer_text, (10, 10))
 
+class SoundManager:
+    def __init__(self):
+
+        pygame.mixer.init()
+
+        self.menu_sound = pygame.mixer.Sound('./assets/audio/backsound-first.mp3')
+        self.game_sound = pygame.mixer.Sound('./assets/audio/awesomeness.wav')
+        self.wall_hit_sound = pygame.mixer.Sound("./assets/audio/wall.wav")
+        self.key_pickup_sound = pygame.mixer.Sound("./assets/audio/stepwater_1.wav")
+        self.success_sound = pygame.mixer.Sound("./assets/audio/stepwood_1.wav")
+
+    def play_menu_sound(self):
+        self.menu_sound.play()
+
+    def stop_menu_sound(self):
+        self.menu_sound.stop()
+
+    def play_game_sound(self):
+        self.game_sound.play()
+
+    def stop_game_sound(self):
+        self.game_sound.stop()
+        
+    def play_wall_hit_sound(self):
+        self.wall_hit_sound.play()
+        
+    def play_key_pickup_sound(self):
+        self.key_pickup_sound.play()
+        
+    def play_success_sound(self):
+        self.success_sound.play()
+        
+    def stop_success_sound(self):
+        self.success_sound.stop()
+        
+    def stop_key_pickup_sound(self):
+        self.key_pickup_sound.stop()
+        
+    def stop_wall_hit_sound(self):
+        self.wall_hit_sound.stop()
+
 
 class Game:
     def __init__(self):
         os.environ["SDL_VIDEO_CENTERED"] = "1"
         pygame.init()
         pygame.display.set_caption("Labirin PBO")
-
+        
+        self.sound_manager = SoundManager()
         self.screen = Screen()
         self.clock = pygame.time.Clock()
         self.surface = pygame.image.load("./assets/surface-soil.png")
@@ -199,6 +236,8 @@ class Game:
         self.walls = []
         self.keys = []
         self.selected_obstacle = random.choice(self.obstacles)
+        self.sound_manager.play_menu_sound()
+        self.sound_manager.stop_game_sound()
 
         x = y = 0
         for row in self.selected_obstacle:
@@ -266,6 +305,8 @@ class Game:
     def start(self):
         while True:
             if self.main_game_loop():
+                self.sound_manager.stop_menu_sound()
+                self.sound_manager.play_game_sound()
                 self.character.rect.topleft = (0, 0)
                 running_game = True
                 self.start_time = time.time()
@@ -283,13 +324,13 @@ class Game:
 
                     key = pygame.key.get_pressed()
                     dx, dy = 0, 0
-                    if key[pygame.K_LEFT]:
+                    if key[pygame.K_LEFT] or key[pygame.K_a]:
                         dx = -5
-                    if key[pygame.K_RIGHT]:
+                    if key[pygame.K_RIGHT] or key[pygame.K_d]:
                         dx = 5
-                    if key[pygame.K_UP]:
+                    if key[pygame.K_UP] or key[pygame.K_w]:
                         dy = -5
-                    if key[pygame.K_DOWN]:
+                    if key[pygame.K_DOWN] or key[pygame.K_s]:
                         dy = 5
                     self.character.move(dx, dy, self.walls, 4270, 3500, self.camera_x, self.camera_y)
                     self.character.collect_key(self.keys)
@@ -329,7 +370,6 @@ class Game:
                 self.reset_game()
 
         pygame.quit()
-
 
 if __name__ == "__main__":
     game = Game()
