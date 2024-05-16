@@ -1,0 +1,2 @@
+
+                    self.score = 0
