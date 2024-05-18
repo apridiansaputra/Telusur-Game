@@ -235,6 +235,23 @@ class Game:
                  "V                     E",
                  "VVVVVVVVVVVVVVVVVVVVVV"],
                 "./assets/map3.png"
+            ),
+            (
+                ["  HHHHHHHHHHHHHHHHHHHV",
+                 "           V         V",
+                 "V          V         V",
+                 "VHHHHH  V  H   V  V  V",
+                 "V       V      V  V  V",
+                 "VHHHHHHHHHHH   V  V  V",
+                 "V              V  V  V",
+                 "VHHHHHHHHHHHHHHH  V  V",
+                 "V                 VK V",
+                 "V  HHHHHHHHHHHHVHHHHHH",
+                 "V              V      E",
+                 "V  HHHHHHHHV   H  HHHV",
+                 "V          V         V",
+                 "HVVVVVVVVVVVVVVVVVVVVV"],
+                 "./assets/map4.png"
             )
         ]
 
