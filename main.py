@@ -49,15 +49,9 @@ class Wall(GameObject):
         elif self.desc == "vertical":
             image_path = theme["vertical"]
         elif self.desc == "surface":
-<<<<<<< HEAD
             image_path = theme["surface"]
         super().__init__(pos, (150, 150))
         self.original_image = pygame.image.load(image_path).convert_alpha()
-=======
-            image_path = "./assets/surface-paving.png"
-        super().__init__(pos, (120, 120))
-        self.original_image = pygame.image.load(image_path)
->>>>>>> a7313348957c11f3a24f4ceee1bcecccd110c23c
         self.image = pygame.transform.scale(self.original_image, self.rect.size)
 
 class Key(GameObject):
@@ -88,7 +82,6 @@ class Screen:
         self.main_screen = pygame.image.load("./assets/main-screen.png").convert_alpha()
         self.winner_screen = pygame.image.load("./assets/winner-screen.png").convert_alpha()
         self.gameover_screen = pygame.image.load("./assets/gameover-screen.png").convert_alpha()
-        self.map_image = pygame.image.load("./assets/Maps-BG.png").convert_alpha()
 
         self.start_button = pygame.image.load("./assets/start-button.png").convert_alpha()
         self.exit_button = pygame.image.load("./assets/exit-button.png").convert_alpha()
@@ -139,10 +132,10 @@ class Screen:
         timer_text = self.font_timer.render(f"Sisa Waktu: {time_left} detik", True, (255, 255, 255))
         self.screen.blit(timer_text, (10, 10))
 
-    def draw_map_overlay(self, time_left):
-        self.screen.blit(self.map_image, (0, 0))
+    def draw_map_overlay(self, map_image, time_left):
+        self.screen.blit(map_image, (0, 0))
         timer_text = self.font_timer.render(f"Sisa Waktu: {time_left} detik", True, (255, 255, 255))
-        self.screen.blit(timer_text, (self.map_image.get_width() + 10, 10))
+        self.screen.blit(timer_text, (map_image.get_width() + 10, 10))
         pygame.display.flip()
 
 class SoundManager:
@@ -194,48 +187,55 @@ class Game:
         self.clock = pygame.time.Clock()
         self.time_limit = 60
 
-        self.obstacles = [
-            [" HHHHHHHHHHHHHHHHHHHHV",
-             "                     V",
-             "V HHHHHHHHHHHHHHHHHH V",
-             "V                    V",
-             "V                    V",
-             "V HHV  HHHHHHHHHHHHV V",
-             "V   V              V V",
-             "V   VK             H V",
-             "V   HHV HHHHV        V",
-             "V     H     HHHHHHHH H",
-             "V                    H",
-             "V                     E",
-             "VVVVVVVVVVVVVVVVVVVVVV"],
-
-            [" HHHHHHHHHHHHHHHHHHHHV",
-             "                     V",
-             "V HHHHHHHHHHHHHHHHHH V",
-             "V                    V",
-             "V HHHHHHHHHHHHHHHHHH V",
-             "V                    V",
-             "V V    V V         V V",
-             "V V    V V         V V",
-             "V HHHHHV HHHVHHHHHHV V",
-             "V      H   KV      H V",
-             "V           V        H",
-             "V                     E",
-             "VVVVVVVVVVVVVVVVVVVVVV"],
-
-            [" HHHHHHHHHHHHHHHHHHHHV",
-             "                     V",
-             "V HHHHHHHHHHHHHHHHHH V",
-             "V                    V",
-             "V HHHHHHHHHHHHHHHHHH V",
-             "V                    V",
-             "V V    V V         V V",
-             "V V    V V         V V",
-             "V VHHHHV HHHHHHHHHHV V",
-             "V H   KH           V V",
-             "V                  V H",
-             "V                     E",
-             "VVVVVVVVVVVVVVVVVVVVVV"]
+        self.obstacles_and_maps = [
+            (
+                [" HHHHHHHHHHHHHHHHHHHHV",
+                 "                     V",
+                 "V HHHHHHHHHHHHHHHHHH V",
+                 "V                    V",
+                 "V                    V",
+                 "V HHV  HHHHHHHHHHHHV V",
+                 "V   V              V V",
+                 "V   VK             H V",
+                 "V   HHV HHHHV        V",
+                 "V     H     HHHHHHHH H",
+                 "V                    H",
+                 "V                     E",
+                 "VVVVVVVVVVVVVVVVVVVVVV"],
+                "./assets/map1.png"
+            ),
+            (
+                [" HHHHHHHHHHHHHHHHHHHHV",
+                 "                     V",
+                 "V HHHHHHHHHHHHHHHHHH V",
+                 "V                    V",
+                 "V HHHHHHHHHHHHHHHHHH V",
+                 "V                    V",
+                 "V V    V V         V V",
+                 "V V    V V         V V",
+                 "V HHHHHV HHHVHHHHHHV V",
+                 "V      H   KV      H V",
+                 "V           V        H",
+                 "V                     E",
+                 "VVVVVVVVVVVVVVVVVVVVVV"],
+                "./assets/map2.png"
+            ),
+            (
+                [" HHHHHHHHHHHHHHHHHHHHV",
+                 "                     V",
+                 "V HHHHHHHHHHHHHHHHHH V",
+                 "V                    V",
+                 "V HHHHHHHHHHHHHHHHHH V",
+                 "V                    V",
+                 "V V    V V         V V",
+                 "V V    V V         V V",
+                 "V VHHHHV HHHHHHHHHHV V",
+                 "V H   KH           V V",
+                 "V                  V H",
+                 "V                     E",
+                 "VVVVVVVVVVVVVVVVVVVVVV"],
+                "./assets/map3.png"
+            )
         ]
 
         self.themes = [
@@ -254,8 +254,9 @@ class Game:
         self.character = Character()
         self.walls = []
         self.keys = []
-        self.selected_obstacle = random.choice(self.obstacles)
+        self.selected_obstacle, self.selected_map_image_path = random.choice(self.obstacles_and_maps)
         self.selected_theme = random.choice(self.themes)
+        
         self.sound_manager.play_menu_sound()
         self.sound_manager.stop_game_sound()
 
@@ -276,6 +277,7 @@ class Game:
             y += 150
             x = 0
 
+        self.map_image = pygame.image.load(self.selected_map_image_path).convert_alpha()
         self.camera_x = 0
         self.camera_y = 0
         self.current_screen = "initial"
@@ -339,7 +341,7 @@ class Game:
 
             if self.show_map:
                 map_elapsed_time = int(time.time() - self.map_start_time)
-                self.screen.draw_map_overlay(15 - map_elapsed_time)
+                self.screen.draw_map_overlay(self.map_image, 15 - map_elapsed_time)
                 if map_elapsed_time >= 15: 
                     self.show_map = False
                     self.start_time = time.time() 
