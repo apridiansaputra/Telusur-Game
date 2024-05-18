@@ -49,9 +49,15 @@ class Wall(GameObject):
         elif self.desc == "vertical":
             image_path = theme["vertical"]
         elif self.desc == "surface":
+<<<<<<< HEAD
             image_path = theme["surface"]
         super().__init__(pos, (150, 150))
         self.original_image = pygame.image.load(image_path).convert_alpha()
+=======
+            image_path = "./assets/surface-paving.png"
+        super().__init__(pos, (120, 120))
+        self.original_image = pygame.image.load(image_path)
+>>>>>>> a7313348957c11f3a24f4ceee1bcecccd110c23c
         self.image = pygame.transform.scale(self.original_image, self.rect.size)
 
 class Key(GameObject):
