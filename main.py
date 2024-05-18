@@ -9,9 +9,9 @@ class GameObject:
         self.rect = pygame.Rect(position[0], position[1], scale[0], scale[1])
 
 class Character(GameObject):
-    def __init__(self, position=(50, 50)):
-        super().__init__(position, (110, 110))
-        self.original_image = pygame.image.load("./assets/player-1.png")
+    def __init__(self, position=(10, 50)):
+        super().__init__(position, (135, 135))
+        self.original_image = pygame.image.load("./assets/player-1.png").convert_alpha()
         self.image = pygame.transform.scale(self.original_image, self.rect.size)
         self.has_key = False
         self.sound_manager = SoundManager()
@@ -42,28 +42,28 @@ class Character(GameObject):
         return self.has_key and self.rect.colliderect(door.rect)
 
 class Wall(GameObject):
-    def __init__(self, pos, desc):
+    def __init__(self, pos, desc, theme):
         self.desc = desc
         if self.desc == "horizontal":
-            image_path = "./assets/wall-grass-horizontal.jpg"
+            image_path = theme["horizontal"]
         elif self.desc == "vertical":
-            image_path = "./assets/wall-grass-vertikal.png"
+            image_path = theme["vertical"]
         elif self.desc == "surface":
-            image_path = "./assets/surface-soil.png"
-        super().__init__(pos, (120, 120))
-        self.original_image = pygame.image.load(image_path)
+            image_path = theme["surface"]
+        super().__init__(pos, (150, 150))
+        self.original_image = pygame.image.load(image_path).convert_alpha()
         self.image = pygame.transform.scale(self.original_image, self.rect.size)
 
 class Key(GameObject):
     def __init__(self, pos):
         super().__init__(pos, (60, 60))
-        self.original_image = pygame.image.load("./assets/kunci.png")
+        self.original_image = pygame.image.load("./assets/kunci.png").convert_alpha()
         self.image = pygame.transform.scale(self.original_image, self.rect.size)
         self.collected = False
 
 class Door(GameObject):
     def __init__(self, pos):
-        super().__init__(pos, (120, 120))
+        super().__init__(pos, (180, 180))
         self.color = (0, 0, 0)
 
     def draw(self, screen, camera_x, camera_y):
@@ -72,30 +72,31 @@ class Door(GameObject):
 class Screen:
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((800, 600))
+        self.screen_width, self.screen_height = 1280, 720 
+        self.screen = pygame.display.set_mode((self.screen_width, self.screen_height), pygame.RESIZABLE)
         self.font_title = pygame.font.Font("./assets/fonts/AoboshiOne-Regular.ttf", 60)
         self.font_info = pygame.font.Font(None, 48)
         self.font_timer = pygame.font.Font("./assets/fonts/AoboshiOne-Regular.ttf", 14)
         self.font_score = pygame.font.Font("./assets/fonts/AoboshiOne-Regular.ttf", 72)
 
-        self.main_screen = pygame.image.load("./assets/main-homescreen.png")
-        self.winner_screen = pygame.image.load("./assets/winner-screen.png")
-        self.gameover_screen = pygame.image.load("./assets/gameover-screen.png")
-        self.map_image = pygame.image.load("./assets/Maps-BG.png")
+        self.main_screen = pygame.image.load("./assets/main-screen.png").convert_alpha()
+        self.winner_screen = pygame.image.load("./assets/winner-screen.png").convert_alpha()
+        self.gameover_screen = pygame.image.load("./assets/gameover-screen.png").convert_alpha()
+        self.map_image = pygame.image.load("./assets/Maps-BG.png").convert_alpha()
 
-        self.start_button = pygame.image.load("./assets/start-button.png")
-        self.exit_button = pygame.image.load("./assets/exit-button.png")
-        self.winner_play_again = pygame.image.load("./assets/win-play-again.png")
-        self.winner_exit = pygame.image.load("./assets/win-exit.png")
-        self.fail_play_again = pygame.image.load("./assets/retry-button.png")
-        self.fail_exit = pygame.image.load("./assets/exit-button.png")
+        self.start_button = pygame.image.load("./assets/start-button.png").convert_alpha()
+        self.exit_button = pygame.image.load("./assets/exit-button.png").convert_alpha()
+        self.winner_play_again = pygame.image.load("./assets/win-play-again.png").convert_alpha()
+        self.winner_exit = pygame.image.load("./assets/win-exit.png").convert_alpha()
+        self.fail_play_again = pygame.image.load("./assets/retry-button.png").convert_alpha()
+        self.fail_exit = pygame.image.load("./assets/exit-button.png").convert_alpha()
 
-        self.start_button = pygame.transform.scale(self.start_button, (200, 100))
-        self.exit_button = pygame.transform.scale(self.exit_button, (200, 100))
-        self.winner_play_again = pygame.transform.scale(self.winner_play_again, (200, 100))
-        self.winner_exit = pygame.transform.scale(self.winner_exit, (200, 100))
-        self.fail_play_again = pygame.transform.scale(self.fail_play_again, (200, 100))
-        self.fail_exit = pygame.transform.scale(self.fail_exit, (200, 100))
+        self.start_button = pygame.transform.scale(self.start_button, (600, 400))
+        self.exit_button = pygame.transform.scale(self.exit_button, (600, 400))
+        self.winner_play_again = pygame.transform.scale(self.winner_play_again, (600, 400))
+        self.winner_exit = pygame.transform.scale(self.winner_exit, (600, 400))
+        self.fail_play_again = pygame.transform.scale(self.fail_play_again, (600, 400))
+        self.fail_exit = pygame.transform.scale(self.fail_exit, (600, 400))
 
     def draw_initial_screen(self, game_status=None, score=None, score_position=None):
         if game_status == "success":
@@ -140,7 +141,7 @@ class Screen:
 
 class SoundManager:
     def __init__(self):
-        pygame.mixer.init()
+        pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=512)
         self.menu_sound = pygame.mixer.Sound('./assets/audio/backsound-first.mp3')
         self.game_sound = pygame.mixer.Sound('./assets/audio/awesomeness.wav')
         self.wall_hit_sound = pygame.mixer.Sound("./assets/audio/wall.wav")
@@ -185,48 +186,62 @@ class Game:
         self.sound_manager = SoundManager()
         self.screen = Screen()
         self.clock = pygame.time.Clock()
-        self.surface = pygame.image.load("./assets/surface-soil.png")
         self.time_limit = 60
+
         self.obstacles = [
-            ["  HHHHHHHHHHHHHHHHHHV",
-             "                    V",
-             "V HHHHHHHHHHHHHHHHH V",
-             "V                   V",
-             "V                   V",
-             "V HHV  HHHHHHHHHHHV V",
-             "V   V             V V",
-             "V   VK            H V",
-             "V   HHV HHHHV       V",
-             "V     H     HHHHHHH H",
-             "V                    E",
-             "VVVVVVVVVVVVVVVVVVVVV"],
+            [" HHHHHHHHHHHHHHHHHHHHV",
+             "                     V",
+             "V HHHHHHHHHHHHHHHHHH V",
+             "V                    V",
+             "V                    V",
+             "V HHV  HHHHHHHHHHHHV V",
+             "V   V              V V",
+             "V   VK             H V",
+             "V   HHV HHHHV        V",
+             "V     H     HHHHHHHH H",
+             "V                    H",
+             "V                     E",
+             "VVVVVVVVVVVVVVVVVVVVVV"],
 
-            ["  HHHHHHHHHHHHHHHHHHV",
-             "                    V",
-             "V HHHHHHHHHHHHHHHHH V",
-             "V                   V",
-             "V HHHHHHHHHHHHHHHHH V",
-             "V                   V",
-             "V V   V V         V V",
-             "V V   V V         V V",
-             "V HHHHV HHHVHHHHHHV V",
-             "V     H   KV      H H",
-             "V          V         E",
-             "VVVVVVVVVVVVVVVVVVVVV"],
+            [" HHHHHHHHHHHHHHHHHHHHV",
+             "                     V",
+             "V HHHHHHHHHHHHHHHHHH V",
+             "V                    V",
+             "V HHHHHHHHHHHHHHHHHH V",
+             "V                    V",
+             "V V    V V         V V",
+             "V V    V V         V V",
+             "V HHHHHV HHHVHHHHHHV V",
+             "V      H   KV      H V",
+             "V           V        H",
+             "V                     E",
+             "VVVVVVVVVVVVVVVVVVVVVV"],
 
-            ["  HHHHHHHHHHHHHHHHHHV",
-             "                    V",
-             "V HHHHHHHHHHHHHHHHH V",
-             "V                   V",
-             "V HHHHHHHHHHHHHHHHH V",
-             "V                   V",
-             "V V   V V         V V",
-             "V V   V V         V V",
-             "V VHHHV HHHHHHHHHHV V",
-             "V H  KH           V H",
-             "V                 V  E",
-             "VVVVVVVVVVVVVVVVVVVVV"]
+            [" HHHHHHHHHHHHHHHHHHHHV",
+             "                     V",
+             "V HHHHHHHHHHHHHHHHHH V",
+             "V                    V",
+             "V HHHHHHHHHHHHHHHHHH V",
+             "V                    V",
+             "V V    V V         V V",
+             "V V    V V         V V",
+             "V VHHHHV HHHHHHHHHHV V",
+             "V H   KH           V V",
+             "V                  V H",
+             "V                     E",
+             "VVVVVVVVVVVVVVVVVVVVVV"]
         ]
+
+        self.themes = [
+            {"horizontal": "./assets/theme/wall-grass-horizontal.jpg", 
+             "vertical": "./assets/theme/wall-grass-vertikal.png", 
+             "surface": "./assets/theme/surface-grass.png"},
+
+            {"horizontal": "./assets/theme/horizontal-new-sayning-2.png", 
+             "vertical": "./assets/theme/vertikal-new-sayning-2.png", 
+             "surface": "./assets/theme/surface-soil.png"},
+        ]
+
         self.reset_game()
 
     def reset_game(self):
@@ -234,6 +249,7 @@ class Game:
         self.walls = []
         self.keys = []
         self.selected_obstacle = random.choice(self.obstacles)
+        self.selected_theme = random.choice(self.themes)
         self.sound_manager.play_menu_sound()
         self.sound_manager.stop_game_sound()
 
@@ -241,17 +257,17 @@ class Game:
         for row in self.selected_obstacle:
             for col in row:
                 if col == "H":
-                    self.walls.append(Wall((x, y), "horizontal"))
+                    self.walls.append(Wall((x, y), "horizontal", self.selected_theme))
                 if col == "V":
-                    self.walls.append(Wall((x, y), "vertical"))
+                    self.walls.append(Wall((x, y), "vertical", self.selected_theme))
                 if col == " ":
-                    self.walls.append(Wall((x, y), "surface"))
+                    self.walls.append(Wall((x, y), "surface", self.selected_theme))
                 if col == "K":
                     self.keys.append(Key((x, y)))
                 if col == "E":
                     self.close_door = Door((x, y))
-                x += 120
-            y += 120
+                x += 150
+            y += 150
             x = 0
 
         self.camera_x = 0
@@ -271,7 +287,8 @@ class Game:
             elif self.current_screen == "game":
                 self.run_game()
                 self.reset_game()
-                self.current_screen = "initial"
+                if self.game_status != "success": 
+                    self.current_screen = "initial"
 
     def handle_initial_screen(self):
         start_button_rect, exit_button_rect = self.screen.draw_initial_screen(self.game_status, self.score, self.score_position)
@@ -299,6 +316,7 @@ class Game:
     def run_game(self):
         self.start_time = time.time()
         running_game = True
+        self.show_map = True
 
         while running_game:
             self.clock.tick(60)
@@ -316,27 +334,27 @@ class Game:
             if self.show_map:
                 map_elapsed_time = int(time.time() - self.map_start_time)
                 self.screen.draw_map_overlay(15 - map_elapsed_time)
-                if map_elapsed_time >= 15:
+                if map_elapsed_time >= 15: 
                     self.show_map = False
-                    self.start_time = time.time()
+                    self.start_time = time.time() 
             else:
                 key = pygame.key.get_pressed()
                 dx, dy = 0, 0
                 if key[pygame.K_LEFT] or key[pygame.K_a]:
-                    dx = -5
+                    dx = -8
                 if key[pygame.K_RIGHT] or key[pygame.K_d]:
-                    dx = 5
+                    dx = 8
                 if key[pygame.K_UP] or key[pygame.K_w]:
-                    dy = -5
+                    dy = -8
                 if key[pygame.K_DOWN] or key[pygame.K_s]:
-                    dy = 5
-                self.character.move(dx, dy, self.walls, 4270, 3500, self.camera_x, self.camera_y)
+                    dy = 8
+                self.character.move(dx, dy, self.walls, 5370, 5500, self.camera_x, self.camera_y)
                 self.character.collect_key(self.keys)
 
-                self.camera_x = max(0, min(self.character.rect.x, 1730))
-                self.camera_y = max(0, min(self.character.rect.y, 845))
+                self.camera_x = max(0, min(self.character.rect.x, 2010))
+                self.camera_y = max(0, min(self.character.rect.y, 1225))
 
-                self.screen.screen.blit(self.surface, (0, 0))
+                self.screen.screen.blit(pygame.image.load(self.selected_theme["surface"]), (0, 0))
 
                 for wall in self.walls:
                     self.screen.screen.blit(wall.image, (wall.rect.x - self.camera_x, wall.rect.y - self.camera_y))
