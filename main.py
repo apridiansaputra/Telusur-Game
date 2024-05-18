@@ -49,7 +49,7 @@ class Wall(GameObject):
         elif self.desc == "vertical":
             image_path = "./assets/wall-grass-vertikal.png"
         elif self.desc == "surface":
-            image_path = "./assets/surface-soil.png"
+            image_path = "./assets/surface-paving.png"
         super().__init__(pos, (120, 120))
         self.original_image = pygame.image.load(image_path)
         self.image = pygame.transform.scale(self.original_image, self.rect.size)
