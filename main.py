@@ -133,7 +133,7 @@ class Screen:
         self.screen.blit(timer_text, (10, 10))
 
     def draw_map_overlay(self, map_image, time_left):
-        self.screen.blit(map_image, (0, 0))
+        self.screen.blit(map_image, (0, -10))
         timer_text = self.font_timer.render(f"Sisa Waktu: {time_left} detik", True, (255, 255, 255))
         self.screen.blit(timer_text, (map_image.get_width() + 10, 10))
         pygame.display.flip()
@@ -359,8 +359,8 @@ class Game:
                 self.character.move(dx, dy, self.walls, 5370, 5500, self.camera_x, self.camera_y)
                 self.character.collect_key(self.keys)
 
-                self.camera_x = max(0, min(self.character.rect.x, 2010))
-                self.camera_y = max(0, min(self.character.rect.y, 1225))
+                self.camera_x = max(0, min(self.character.rect.x - self.screen.screen_width // 4, 2010))
+                self.camera_y = max(0, min(self.character.rect.y - self.screen.screen_height // 4, 1225))
 
                 self.screen.screen.blit(pygame.image.load(self.selected_theme["surface"]), (0, 0))
 
