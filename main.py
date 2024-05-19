@@ -11,7 +11,11 @@ class GameObject:
 class Character(GameObject):
     def __init__(self, position=(10, 50)):
         super().__init__(position, (135, 135))
-        self.original_image = pygame.image.load("./assets/player-1.png").convert_alpha()
+        self.frame_index = 0
+        self.frame_counter = 0
+        self.frame_speed = 5
+        self.image_frames = [pygame.image.load(f"./assets/character/adventurer_walk{i+1}.png").convert_alpha() for i in range(2)]  # Load 4 frames
+        self.original_image = self.image_frames[self.frame_index]
         self.image = pygame.transform.scale(self.original_image, self.rect.size)
         self.has_key = False
         self.sound_manager = SoundManager()
@@ -20,6 +24,14 @@ class Character(GameObject):
         old_x, old_y = self.rect.x, self.rect.y
         self.rect.x += dx
         self.rect.y += dy
+
+        if dx != 0 or dy != 0:
+            self.frame_counter += 1
+            if self.frame_counter >= self.frame_speed:
+                self.frame_counter = 0
+                self.frame_index = (self.frame_index + 1) % len(self.image_frames)
+                self.original_image = self.image_frames[self.frame_index]
+                self.image = pygame.transform.scale(self.original_image, self.rect.size)
 
         for wall in walls:
             if wall.desc != "surface" and self.rect.colliderect(wall.rect):
