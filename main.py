@@ -11,7 +11,7 @@ class GameObject:
 
 class Character(GameObject):
     def __init__(self, position=(10, 50)):
-        super().__init__(position, (135, 135))
+        super().__init__(position, (120, 120))
         self.frame_index = 0
         self.frame_counter = 0
         self.frame_speed = 5
@@ -39,7 +39,7 @@ class Character(GameObject):
                 self.last_direction = "up"
             if self.frame_counter >= self.frame_speed:
                 self.frame_counter = 0
-                self.frame_index = (self.frame_index + 1) % len(self.image_frames_right)  # Assuming all sets of frames have the same length
+                self.frame_index = (self.frame_index + 1) % len(self.image_frames_right) 
                 if self.last_direction == "right":
                     self.original_image = self.image_frames_right[self.frame_index]
                 elif self.last_direction == "left":
@@ -119,8 +119,8 @@ class Screen:
 
         self.start_button = pygame.transform.scale(self.start_button, (200, 100))
         self.exit_button = pygame.transform.scale(self.exit_button, (200, 100))
-        self.winner_play_again = pygame.transform.scale(self.winner_play_again, (200, 100))
-        self.winner_exit = pygame.transform.scale(self.winner_exit, (200, 100))
+        self.winner_play_again = pygame.transform.scale(self.winner_play_again, (100, 50))
+        self.winner_exit = pygame.transform.scale(self.winner_exit, (100, 50))
         self.fail_play_again = pygame.transform.scale(self.fail_play_again, (200, 100))
         self.fail_exit = pygame.transform.scale(self.fail_exit, (200, 100))
 
@@ -214,27 +214,28 @@ class Game:
         self.clock = pygame.time.Clock()
         self.time_limit = 60
 
-        self.obstacles_and_maps = [(
-                ["  HHVHHHHHHHHHHHHHVHHV",
-                 "    V             V   E",
-                 "V V V HHHV VHVHV  H  V",
-                 "V V V    V V H V     V",
-                 "V H HHHHHH V   V  V  V",
-                 "V          V V VHHV  V",
-                 "V HHHHHHHHHH HHV  VH V",
-                 "V              V  V  V",
-                 "VHHHH HHHHHHHH H HHV V",
-                 "V                 KV V",
+        self.obstacles_and_maps = [
+            (
+                [" HHHVHHHHHHHHHHHHHVHHV",
+                 "    V                 E",
+                 "V V V HHHHHVHHHHV  V V",
+                 "V V V      V    H  V V",
+                 "V H HHHHHH V V     V V",
+                 "V          V VHHHHHV V",
+                 "V HHHHHHHHHH V     V V",
+                 "V            V V  KV V",
+                 "VHHHH HHHHHHHH HHHHV V",
+                 "V                  V V",
                  "V V HHHHHHHHHHHHHHHH H",
                  "V V                  V",
                  "VVVVVVVVVVVVVVVVVVVVVV",],
                 "./assets/map1.png"
             ),
             (
-                [" HVHVHHHVHVHHHHHHHHHHV",
-                 "  V V   V H          V",
-                 "V H HHH V  V  HHHHHHHH",
-                 "V       V  VV         E",
+                [" HVHVHHHHHHVHHHHHHHHHV",
+                 "  V V      V         V",
+                 "V H HHHH V V HHHHHHHHH",
+                 "V        V V          E",
                  "VHHHH HHHH VHHHH HHH V",
                  "V          V         V",
                  "VHHH  V V  V  HHHHHHHV",
@@ -242,7 +243,7 @@ class Game:
                  "V HH HH V  VHH   V   V",
                  "V       V  V     V K V",
                  "VHHH HHHV  HHH HHHHHHV",
-                 "V       V             ",
+                 "V       V            V",
                  "VVVVVVVVVVVVVVVVVVVVVV"],
                 "./assets/map2.png"
             ),
@@ -251,12 +252,12 @@ class Game:
                  "      V              V",
                  "V V HHH V HHHHVHHHH HV",
                  "V V     V     V      V",
-                 "V VHHHH V VHV V  VHH V",
+                 "V VHHHH V HHV V  VHH V",
                  "V V     V   V V  V   V",
                  "V V VHHHHHHHH V  V V V",
                  "V H H         V  V VKV",
-                 "V     VHVHHV  V  V V V"
-                 "VHV HHVHV    VV  V   V",
+                 "V     VVVHHV  V  V V V"
+                 "VHV HHVHH    VV  V   V",
                  "V H   H   HHHHHHHHHHHH",
                  "V       V             E",
                  "VVVVVVVVVVVVVVVVVVVVVV"],
@@ -279,7 +280,7 @@ class Game:
                  "./assets/map4.png"
             ),
             (
-                ["  HHHHHHHHHVHHHHHHHHHV",
+                [" HHHHHHHHHHVHHHHHHHHHV",
                  "           V         V",
                  "VHHHHHH VH H HHV VVV V",
                  "V       V      V V V V",
@@ -407,20 +408,20 @@ class Game:
                 key = pygame.key.get_pressed()
                 dx, dy = 0, 0
                 if key[pygame.K_LEFT] or key[pygame.K_a]:
-                    dx = -8
+                    dx = -10
                 if key[pygame.K_RIGHT] or key[pygame.K_d]:
-                    dx = 8
+                    dx = 10
                 if key[pygame.K_UP] or key[pygame.K_w]:
-                    dy = -8
+                    dy = -10
                 if key[pygame.K_DOWN] or key[pygame.K_s]:
-                    dy = 8
+                    dy = 10
                 self.character.move(dx, dy, self.walls, 5370, 5500, self.camera_x, self.camera_y)
                 self.character.collect_key(self.keys)
 
                 self.camera_x = max(0, min(self.character.rect.x - self.screen.screen_width // 4, 2010))
-                self.camera_y = max(0, min(self.character.rect.y - self.screen.screen_height // 4, 1225))
+                self.camera_y = max(0, min(self.character.rect.y - self.screen.screen_height // 4, 1100))
 
-                self.screen.screen.blit(pygame.image.load(self.selected_theme["surface"]), (0, 0))
+                self.screen.screen.fill("yellow")
 
                 for wall in self.walls:
                     self.screen.screen.blit(wall.image, (wall.rect.x - self.camera_x, wall.rect.y - self.camera_y))
