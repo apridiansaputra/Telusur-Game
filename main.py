@@ -187,8 +187,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.time_limit = 60
 
-        self.obstacles_and_maps = [
-            (
+        self.obstacles_and_maps = [(
                 ["  HHVHHHHHHHHHHHHHVHHV",
                  "    V             V   E",
                  "V V V HHHV VHVHV  H  V",
