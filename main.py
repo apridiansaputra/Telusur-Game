@@ -90,12 +90,12 @@ class Screen:
         self.fail_play_again = pygame.image.load("./assets/retry-button.png").convert_alpha()
         self.fail_exit = pygame.image.load("./assets/exit-button.png").convert_alpha()
 
-        self.start_button = pygame.transform.scale(self.start_button, (600, 400))
-        self.exit_button = pygame.transform.scale(self.exit_button, (600, 400))
-        self.winner_play_again = pygame.transform.scale(self.winner_play_again, (600, 400))
-        self.winner_exit = pygame.transform.scale(self.winner_exit, (600, 400))
-        self.fail_play_again = pygame.transform.scale(self.fail_play_again, (600, 400))
-        self.fail_exit = pygame.transform.scale(self.fail_exit, (600, 400))
+        self.start_button = pygame.transform.scale(self.start_button, (200, 100))
+        self.exit_button = pygame.transform.scale(self.exit_button, (200, 100))
+        self.winner_play_again = pygame.transform.scale(self.winner_play_again, (200, 100))
+        self.winner_exit = pygame.transform.scale(self.winner_exit, (200, 100))
+        self.fail_play_again = pygame.transform.scale(self.fail_play_again, (200, 100))
+        self.fail_exit = pygame.transform.scale(self.fail_exit, (200, 100))
 
     def draw_initial_screen(self, game_status=None, score=None, score_position=None):
         if game_status == "success":
@@ -189,52 +189,84 @@ class Game:
 
         self.obstacles_and_maps = [
             (
-                [" HHHHHHHHHHHHHHHHHHHHV",
-                 "                     V",
-                 "V HHHHHHHHHHHHHHHHHH V",
-                 "V                    V",
-                 "V                    V",
-                 "V HHV  HHHHHHHHHHHHV V",
-                 "V   V              V V",
-                 "V   VK             H V",
-                 "V   HHV HHHHV        V",
-                 "V     H     HHHHHHHH H",
-                 "V                    H",
-                 "V                     E",
-                 "VVVVVVVVVVVVVVVVVVVVVV"],
+                ["  HHVHHHHHHHHHHHHHVHHV",
+                 "    V             V   E",
+                 "V V V HHHV VHVHV  H  V",
+                 "V V V    V V H V     V",
+                 "V H HHHHHH V   V  V  V",
+                 "V          V V VHHV  V",
+                 "V HHHHHHHHHH HHV  VH V",
+                 "V              V  V  V",
+                 "VHHHH HHHHHHHH H HHV V",
+                 "V                 KV V",
+                 "V V HHHHHHHHHHHHHHHH H",
+                 "V V                  V",
+                 "VVVVVVVVVVVVVVVVVVVVVV",],
                 "./assets/map1.png"
             ),
             (
-                [" HHHHHHHHHHHHHHHHHHHHV",
-                 "                     V",
-                 "V HHHHHHHHHHHHHHHHHH V",
-                 "V                    V",
-                 "V HHHHHHHHHHHHHHHHHH V",
-                 "V                    V",
-                 "V V    V V         V V",
-                 "V V    V V         V V",
-                 "V HHHHHV HHHVHHHHHHV V",
-                 "V      H   KV      H V",
-                 "V           V        H",
-                 "V                     E",
+                [" HVHVHHHVHVHHHHHHHHHHV",
+                 "  V V   V H          V",
+                 "V H HHH V  V  HHHHHHHH",
+                 "V       V  VV         E",
+                 "VHHHH HHHH VHHHH HHH V",
+                 "V          V         V",
+                 "VHHH  V V  V  HHHHHHHV",
+                 "V     V V  V         V",
+                 "V HH HH V  VHH   V   V",
+                 "V       V  V     V K V",
+                 "VHHH HHHV  HHH HHHHHHV",
+                 "V       V             ",
                  "VVVVVVVVVVVVVVVVVVVVVV"],
                 "./assets/map2.png"
             ),
             (
-                [" HHHHHHHHHHHHHHHHHHHHV",
-                 "                     V",
-                 "V HHHHHHHHHHHHHHHHHH V",
-                 "V                    V",
-                 "V HHHHHHHHHHHHHHHHHH V",
-                 "V                    V",
-                 "V V    V V         V V",
-                 "V V    V V         V V",
-                 "V VHHHHV HHHHHHHHHHV V",
-                 "V H   KH           V V",
-                 "V                  V H",
-                 "V                     E",
+                [" HHHHHVHHHHHHHHHHHHHHV",
+                 "      V              V",
+                 "V V HHH V HHHHVHHHH HV",
+                 "V V     V     V      V",
+                 "V VHHHH V VHV V  VHH V",
+                 "V V     V   V V  V   V",
+                 "V V VHHHHHHHH V  V V V",
+                 "V H H         V  V VKV",
+                 "V     VHVHHV  V  V V V"
+                 "VHV HHVHV    VV  V   V",
+                 "V H   H   HHHHHHHHHHHH",
+                 "V       V             E",
                  "VVVVVVVVVVVVVVVVVVVVVV"],
                 "./assets/map3.png"
+            ),
+            (
+                [" HHHHHHHHHHVHHHHHHHHHV",
+                 "           V         V",
+                 "VHHHHH  V  H   V  V  V",
+                 "V       V      V  V  V",
+                 "VHHHHHHHHHHH   V  V  V",
+                 "V              V  V  V",
+                 "VHHHHHHHHHHHHHHH  V  V",
+                 "V                 VK V",
+                 "V  HHHHHHHHHHHHVHHHHHH",
+                 "V              V      E",
+                 "V  HHHHHHHHV   H  HHHV",
+                 "V          V         V",
+                 "VVVVVVVVVVVVVVVVVVVVVV"],
+                 "./assets/map4.png"
+            ),
+            (
+                ["  HHHHHHHHHVHHHHHHHHHV",
+                 "           V         V",
+                 "VHHHHHH VH H HHV VVV V",
+                 "V       V      V V V V",
+                 "VHHHVHHHHHHH   H H HHV",
+                 "V   V                V",
+                 "V  HHHHHHHHHHHHHHHHV V",
+                 "V                    V",
+                 "V  HHHHVHH HHHHVHHHHHH",
+                 "V     KV       V      E",
+                 "V  HHHHHHHHV   H  HHHV",
+                 "V          V         V",
+                 "VVVVVVVVVVVVVVVVVVVVVV"],
+                 "./assets/map5.png"
             )
         ]
 
