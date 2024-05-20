@@ -117,40 +117,48 @@ class Screen:
         self.fail_play_again = pygame.image.load("./assets/retry-button.png").convert_alpha()
         self.fail_exit = pygame.image.load("./assets/exit-button.png").convert_alpha()
 
-        self.start_button = pygame.transform.scale(self.start_button, (200, 100))
-        self.exit_button = pygame.transform.scale(self.exit_button, (200, 100))
-        self.winner_play_again = pygame.transform.scale(self.winner_play_again, (100, 50))
-        self.winner_exit = pygame.transform.scale(self.winner_exit, (100, 50))
-        self.fail_play_again = pygame.transform.scale(self.fail_play_again, (200, 100))
-        self.fail_exit = pygame.transform.scale(self.fail_exit, (200, 100))
+        self.start_button = pygame.transform.scale(self.start_button, (210, 80))
+        self.exit_button = pygame.transform.scale(self.exit_button, (210, 80))
+        self.winner_play_again = pygame.transform.scale(self.winner_play_again, (80, 80))
+        self.winner_exit = pygame.transform.scale(self.winner_exit, (80, 80))
+        self.fail_play_again = pygame.transform.scale(self.fail_play_again, (210, 80))
+        self.fail_exit = pygame.transform.scale(self.fail_exit, (210, 80))
 
     def draw_initial_screen(self, game_status=None, score=None, score_position=None):
+        screen_width, screen_height = self.screen.get_width(), self.screen.get_height()
+
         if game_status == "success":
-            self.screen.blit(self.winner_screen, (0, 0))
+            self.screen.blit(pygame.transform.scale(self.winner_screen, (screen_width, screen_height)), (0, 0))
             start_button_image = self.winner_play_again
+            start_button_rect = start_button_image.get_rect(center=(screen_width // 2 - 80, screen_height // 2 + 100))
+            self.screen.blit(start_button_image, start_button_rect)
             exit_button_image = self.winner_exit
+            exit_button_rect = exit_button_image.get_rect(center=(screen_width // 2 + 80, screen_height // 2 + 100))
+            self.screen.blit(exit_button_image, exit_button_rect)
+            
         elif game_status == "fail":
-            self.screen.blit(self.gameover_screen, (0, 0))
+            self.screen.blit(pygame.transform.scale(self.gameover_screen, (screen_width, screen_height)), (0, 0))
             start_button_image = self.fail_play_again
             exit_button_image = self.fail_exit
         else:
-            self.screen.blit(self.main_screen, (0, 0))
+            self.screen.blit(pygame.transform.scale(self.main_screen, (screen_width, screen_height)), (0, 0))
             start_button_image = self.start_button
             exit_button_image = self.exit_button
 
         if game_status == "success" and score is not None:
             score_text = self.font_score.render(str(score), True, (255, 255, 255))
             if score_position is None:
-                score_rect = score_text.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() // 2))
+                score_rect = score_text.get_rect(center=(screen_width // 2, screen_height // 2))
             else:
                 score_rect = score_text.get_rect(center=score_position)
             self.screen.blit(score_text, score_rect)
 
-        start_button_rect = start_button_image.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() // 2 + 150))
-        self.screen.blit(start_button_image, start_button_rect)
+        if game_status != "success":
+            start_button_rect = start_button_image.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() // 2 ))
+            self.screen.blit(start_button_image, start_button_rect)
 
-        exit_button_rect = exit_button_image.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() // 2 + 220))
-        self.screen.blit(exit_button_image, exit_button_rect)
+            exit_button_rect = exit_button_image.get_rect(center=(screen_width // 2, screen_height // 2 + 100))
+            self.screen.blit(exit_button_image, exit_button_rect)
 
         pygame.display.flip()
         return start_button_rect, exit_button_rect
@@ -160,7 +168,7 @@ class Screen:
         self.screen.blit(timer_text, (10, 10))
 
     def draw_map_overlay(self, map_image, time_left):
-        self.screen.blit(map_image, (0, -10))
+        self.screen.blit(pygame.transform.scale(map_image, (self.screen.get_width(), self.screen.get_height())), (0, -10))
         timer_text = self.font_timer.render(f"Sisa Waktu: {time_left} detik", True, (255, 255, 255))
         self.screen.blit(timer_text, (map_image.get_width() + 10, 10))
         pygame.display.flip()
@@ -343,7 +351,7 @@ class Game:
         self.start_time = time.time()
         self.game_status = None
         self.score = 0
-        self.score_position = (self.screen.screen.get_width() // 2, 100)
+        self.score_position = (self.screen.screen.get_width() // 2, self.screen.screen.get_height() // 2)
         self.show_map = True
         self.map_start_time = None
 
@@ -376,7 +384,9 @@ class Game:
                     elif exit_button_rect.collidepoint(mouse_pos):
                         pygame.quit()
                         sys.exit()
-
+               # elif event.type == pygame.VIDEORESIZE:
+                   # self.screen.handle_resize(event)
+                    
             self.screen.draw_initial_screen(self.game_status, self.score, self.score_position)
             pygame.display.flip()
 
