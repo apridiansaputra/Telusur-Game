@@ -247,22 +247,22 @@ class Game:
                  "VVVVVVVVVVVVVVVVVVVVVV"],
                 "./assets/map2.png"
             ),
-            (
-                [" HHHHHVHHHHHHHHHHHHHHV",
-                 "      V              V",
-                 "V V HHH V HHHHVHHHH HV",
-                 "V V     V     V      V",
-                 "V VHHHH V HHV V  VHH V",
-                 "V V     V   V V  V   V",
-                 "V V VHHHHHHHH V  V V V",
-                 "V H H         V  V VKV",
-                 "V     VVVHHV  V  V V V"
-                 "VHV HHVHH    VV  V   V",
-                 "V H   H   HHHHHHHHHHHH",
-                 "V       V             E",
-                 "VVVVVVVVVVVVVVVVVVVVVV"],
-                "./assets/map3.png"
-            ),
+            # (
+            #     [" HHHHHHHHHHHHHHHHHHHHV",
+            #      "                     V",
+            #      "V HHHHHHHHHHHHHHHHHHHV",
+            #      "V                    V",
+            #      "V                    V",
+            #      "V                    V",
+            #      "V                    V",
+            #      "V                    V",
+            #      "V                    V",
+            #      "V                    V",
+            #      "V                    V",
+            #      "V                     E",
+            #      "VVVVVVVVVVVVVVVVVVVVVV"],
+            #     "./assets/map3.png"
+            # ),
             (
                 [" HHHHHHHHHHVHHHHHHHHHV",
                  "           V         V",
@@ -400,8 +400,8 @@ class Game:
 
             if self.show_map:
                 map_elapsed_time = int(time.time() - self.map_start_time)
-                self.screen.draw_map_overlay(self.map_image, 15 - map_elapsed_time)
-                if map_elapsed_time >= 15: 
+                self.screen.draw_map_overlay(self.map_image, 10 - map_elapsed_time)
+                if map_elapsed_time >= 10: 
                     self.show_map = False
                     self.start_time = time.time() 
             else:
@@ -419,7 +419,7 @@ class Game:
                 self.character.collect_key(self.keys)
 
                 self.camera_x = max(0, min(self.character.rect.x - self.screen.screen_width // 4, 2010))
-                self.camera_y = max(0, min(self.character.rect.y - self.screen.screen_height // 4, 1100))
+                self.camera_y = max(0, min(self.character.rect.y - self.screen.screen_height // 4, 1050))
 
                 self.screen.screen.fill("yellow")
 
