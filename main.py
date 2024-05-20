@@ -351,7 +351,7 @@ class Game:
         self.start_time = time.time()
         self.game_status = None
         self.score = 0
-        self.score_position = (self.screen.screen.get_width() // 2, 100)
+        self.score_position = (self.screen.screen.get_width() // 2, self.screen.screen.get_height() // 2)
         self.show_map = True
         self.map_start_time = None
 
