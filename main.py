@@ -18,6 +18,7 @@ class Character(GameObject):
         self.image_frames_left = [pygame.image.load(f"./assets/character/adventurer_walk_left{i+1}.png").convert_alpha() for i in range(2)]
         self.image_frames_right = [pygame.image.load(f"./assets/character/adventurer_walk_right{i+1}.png").convert_alpha() for i in range(2)]
         self.image_frames_up = [pygame.image.load(f"./assets/character/adventurer_walk_up{i+1}.png").convert_alpha() for i in range(2)]
+        self.image_frames_down = [pygame.image.load(f"./assets/character/adventurer_walk_down{i+1}.png").convert_alpha() for i in range(2)]
         self.original_image = self.image_frames_right[self.frame_index]
         self.image = pygame.transform.scale(self.original_image, self.rect.size)
         self.has_key = False
@@ -31,12 +32,14 @@ class Character(GameObject):
 
         if dx != 0 or dy != 0:
             self.frame_counter += 1
-            if dx > 0 or dy > 0:
+            if dx > 0:
                 self.last_direction = "right"
             elif dx < 0:
                 self.last_direction = "left"
             elif dy < 0:
                 self.last_direction = "up"
+            elif dy > 0 :
+                self.last_direction = "down"
             if self.frame_counter >= self.frame_speed:
                 self.frame_counter = 0
                 self.frame_index = (self.frame_index + 1) % len(self.image_frames_right) 
@@ -46,6 +49,8 @@ class Character(GameObject):
                     self.original_image = self.image_frames_left[self.frame_index]
                 elif self.last_direction == "up":
                     self.original_image = self.image_frames_up[self.frame_index]
+                elif self.last_direction == "down":
+                    self.original_image = self.image_frames_down[self.frame_index]
                 self.image = pygame.transform.scale(self.original_image, self.rect.size)
 
         for wall in walls:
@@ -83,8 +88,8 @@ class Wall(GameObject):
 
 class Key(GameObject):
     def __init__(self, pos):
-        super().__init__(pos, (60, 60))
-        self.original_image = pygame.image.load("./assets/kunci.png").convert_alpha()
+        super().__init__(pos, (150, 150))
+        self.original_image = pygame.image.load("./assets/key-kehidupan.png").convert_alpha()
         self.image = pygame.transform.scale(self.original_image, self.rect.size)
         self.collected = False
 
