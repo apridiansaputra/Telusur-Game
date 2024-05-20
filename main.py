@@ -95,7 +95,7 @@ class Key(GameObject):
 
 class Door(GameObject):
     def __init__(self, pos):
-        super().__init__(pos, (180, 180))
+        super().__init__(pos, (100, 100))
         self.color = (0, 0, 0)
 
     def draw(self, screen, camera_x, camera_y):
@@ -434,7 +434,10 @@ class Game:
                 self.camera_x = max(0, min(self.character.rect.x - self.screen.screen_width // 4, 2010))
                 self.camera_y = max(0, min(self.character.rect.y - self.screen.screen_height // 4, 1100))
 
-                self.screen.screen.fill("yellow")
+                screen_size = self.screen.screen.get_size()
+                image = pygame.image.load(self.selected_theme["surface"]).convert_alpha()
+                scaled_image = pygame.transform.scale(image, screen_size)
+                self.screen.screen.blit(scaled_image, (0, 0))
 
                 for wall in self.walls:
                     self.screen.screen.blit(wall.image, (wall.rect.x - self.camera_x, wall.rect.y - self.camera_y))
