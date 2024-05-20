@@ -1,15 +1,32 @@
-(
-                [" HHHHHVHHHHHHHHHHHHHHV",
-                 "      V              V",
-                 "V V HHH V HHHHVHHHH HV",
-                 "V V     V     V      V",
-                 "V VHHHH V  V  V  VHH V",
-                 "V V     V  V  V  V   V",
-                 "V V VHHHHHHH  V  V V V",
-                 "V H H         V  V VKV",
-                 "V     VHVHHV  V  V V V"
-                 "VHV HHV V  VVVV  V   V",
-                 "V H   H H  HHHHHHHHHHH",
-                 "V                     E",
+            (
+                [" HHHHHHHHHHVHHHHHHHHHV",
+                 "           V         V",
+                 "VHHHHH  V  H   V  V  V",
+                 "V       V      V  V  V",
+                 "VHHHHHHHHHHH   V  V  V",
+                 "V              V  V  V",
+                 "VHHHHHHHHHHHHHHH  V  V",
+                 "V                 VK V",
+                 "V  HHHHHHHHHHHHVHHHHHH",
+                 "V              V      E",
+                 "V  HHHHHHHHV   H  HHHV",
+                 "V          V         V",
                  "VVVVVVVVVVVVVVVVVVVVVV"],
-                "./assets/map3.png"
+                 "./assets/map4.png"
+            ),
+            (
+                [" HHHHHHHHHHVHHHHHHHHHV",
+                 "           V         V",
+                 "VHHHHHH VH H HHV VVV V",
+                 "V       V      V V V V",
+                 "VHHHVHHHHHHH   H H HHV",
+                 "V   V                V",
+                 "V  HHHHHHHHHHHHHHHHV V",
+                 "V                    V",
+                 "V  HHHHVHH HHHHVHHHHHH",
+                 "V     KV       V      E",
+                 "V  HHHHHHHHV   H  HHHV",
+                 "V          V         V",
+                 "VVVVVVVVVVVVVVVVVVVVVV"],
+                 "./assets/map5.png"
+            )
