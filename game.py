@@ -111,7 +111,7 @@ class Game:
 
             {"horizontal": "./assets/theme/horizontal-new-sayning-2.png", 
              "vertical": "./assets/theme/vertikal-new-sayning-2.png", 
-             "surface": "./assets/theme/surface-soil.png"},
+             "surface": "./assets/theme/surface-grass-2.png"},
         ]
 
         self.reset_game()

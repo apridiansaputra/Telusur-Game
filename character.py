@@ -4,7 +4,7 @@ from soundManager import SoundManager
 
 class Character(GameObject):
     def __init__(self, position=(10, 50)):
-        super().__init__(position, (120, 120))
+        super().__init__(position, (105, 105))
         self.frame_index = 0
         self.frame_counter = 0
         self.frame_speed = 5
