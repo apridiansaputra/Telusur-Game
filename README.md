@@ -1,5 +1,4 @@
 # Telusur
-![Homescreen](assets\MENU.gif)
 ## 📖Daftar Isi
 - [Deskripsi Game](#deskripsi-game)
 
@@ -37,7 +36,7 @@ Player diberikan batas waktu tiga menit untuk menemukan jalan keluar dari labiri
 mengambil kunci terlebih dahulu sebagai syarat keluar dari labirin. Jika waktu berakhir dan player belum berhasil menyelesaikan labirin, mereka akan langsung kembali ke menu utama permainan.
 
 ## 📖UML Class Diagram
-![UML](assets\UML.jpg)
+![UML](assets/UML.png)
 
 ## 👨🏽‍💻Kontributor
 | Nama | NIM | Peran |
