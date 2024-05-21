@@ -108,7 +108,7 @@ class Screen:
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height), pygame.RESIZABLE)
         self.font_title = pygame.font.Font("./assets/fonts/AoboshiOne-Regular.ttf", 60)
         self.font_info = pygame.font.Font(None, 48)
-        self.font_timer = pygame.font.Font("./assets/fonts/AoboshiOne-Regular.ttf", 14)
+        self.font_timer = pygame.font.Font("./assets/fonts/AoboshiOne-Regular.ttf", 18)
         self.font_score = pygame.font.Font("./assets/fonts/AoboshiOne-Regular.ttf", 72)
 
         self.main_screen = pygame.image.load("./assets/main-screen.png").convert_alpha()
@@ -121,6 +121,8 @@ class Screen:
         self.winner_exit = pygame.image.load("./assets/win-exit.png").convert_alpha()
         self.fail_play_again = pygame.image.load("./assets/retry-button.png").convert_alpha()
         self.fail_exit = pygame.image.load("./assets/exit-button.png").convert_alpha()
+
+        self.timer_bg = pygame.image.load("./assets/timer_backgoround.png").convert_alpha()
 
         self.start_button = pygame.transform.scale(self.start_button, (210, 80))
         self.exit_button = pygame.transform.scale(self.exit_button, (210, 80))
@@ -151,7 +153,7 @@ class Screen:
             exit_button_image = self.exit_button
 
         if game_status == "success" and score is not None:
-            score_text = self.font_score.render(str(score), True, (255, 255, 255))
+            score_text = self.font_score.render(str(score), True, (139,	106, 72))
             if score_position is None:
                 score_rect = score_text.get_rect(center=(screen_width // 2, screen_height // 2))
             else:
@@ -167,14 +169,17 @@ class Screen:
 
         pygame.display.flip()
         return start_button_rect, exit_button_rect
-
+    
     def draw_timer(self, time_left):
-        timer_text = self.font_timer.render(f"Sisa Waktu: {time_left} detik", True, (255, 255, 255))
-        self.screen.blit(timer_text, (10, 10))
+        timer_text = self.font_timer.render(f"waktu: {time_left} detik", True, (255, 255, 255))
+        timer_rect = timer_text.get_rect(topleft=(10, 10))
+        timer_bg_new = pygame.transform.scale(self.timer_bg, (timer_rect.width + 20, timer_rect.height + 20))
+        self.screen.blit(timer_bg_new, (timer_rect.x - 10, timer_rect.y - 10))
+        self.screen.blit(timer_text, timer_rect)
 
     def draw_map_overlay(self, map_image, time_left):
         self.screen.blit(pygame.transform.scale(map_image, (self.screen.get_width(), self.screen.get_height())), (0, -10))
-        timer_text = self.font_timer.render(f"Sisa Waktu: {time_left} detik", True, (255, 255, 255))
+        timer_text = self.font_timer.render(f"{time_left}", True, (255, 255, 255))
         self.screen.blit(timer_text, (map_image.get_width() + 10, 10))
         pygame.display.flip()
 
@@ -356,7 +361,7 @@ class Game:
         self.start_time = time.time()
         self.game_status = None
         self.score = 0
-        self.score_position = (self.screen.screen.get_width() // 2, self.screen.screen.get_height() // 2)
+        self.score_position = (self.screen.screen.get_width() // 2, self.screen.screen.get_height() // 2 + 10)
         self.show_map = True
         self.map_start_time = None
 
@@ -381,15 +386,23 @@ class Game:
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_pos = pygame.mouse.get_pos()
                     if start_button_rect.collidepoint(mouse_pos):
-                        self.current_screen = "game"
-                        self.sound_manager.stop_menu_sound()
-                        self.sound_manager.play_game_sound()
-                        self.map_start_time = time.time()
-                        return
+                        if self.game_status == "success": 
+                            self.reset_game() 
+                            self.current_screen = "game"
+                            self.sound_manager.stop_menu_sound()
+                            self.sound_manager.play_game_sound()
+                            self.map_start_time = time.time()
+                            return
+                        else:
+                            self.current_screen = "game"
+                            self.sound_manager.stop_menu_sound()
+                            self.sound_manager.play_game_sound()
+                            self.map_start_time = time.time()
+                            return
                     elif exit_button_rect.collidepoint(mouse_pos):
                         pygame.quit()
                         sys.exit()
-                    
+
             self.screen.draw_initial_screen(self.game_status, self.score, self.score_position)
             pygame.display.flip()
 
@@ -413,8 +426,8 @@ class Game:
 
             if self.show_map:
                 map_elapsed_time = int(time.time() - self.map_start_time)
-                self.screen.draw_map_overlay(self.map_image, 15 - map_elapsed_time)
-                if map_elapsed_time >= 15: 
+                self.screen.draw_map_overlay(self.map_image, 12 - map_elapsed_time)
+                if map_elapsed_time >= 12: 
                     self.show_map = False
                     self.start_time = time.time() 
             else:

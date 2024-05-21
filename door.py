@@ -3,7 +3,7 @@ from gameObject import GameObject
 
 class Door(GameObject):
     def __init__(self, pos):
-        super().__init__(pos, (60, 60))
+        super().__init__(pos, (100, 100))
         self.color = (0, 0, 0)
 
     def draw(self, screen, camera_x, camera_y):

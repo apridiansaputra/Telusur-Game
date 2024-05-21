@@ -3,68 +3,81 @@ import pygame
 class Screen:
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((800, 600))
-        self.font_title = pygame.font.Font("./assets/fonts/Gameplay.ttf", 60)
+        self.screen_width, self.screen_height = 1280, 720 
+        self.screen = pygame.display.set_mode((self.screen_width, self.screen_height), pygame.RESIZABLE)
+        self.font_title = pygame.font.Font("./assets/fonts/AoboshiOne-Regular.ttf", 60)
         self.font_info = pygame.font.Font(None, 48)
-        self.original_image = pygame.image.load("./assets/homescreen.png")
-        self.start_button_image = pygame.image.load("./assets/play-button.png")
-        self.exit_button_image = pygame.image.load("./assets/exit-button.png")
+        self.font_timer = pygame.font.Font("./assets/fonts/AoboshiOne-Regular.ttf", 18)
+        self.font_score = pygame.font.Font("./assets/fonts/AoboshiOne-Regular.ttf", 72)
 
-        self.start_button_image = pygame.transform.scale(self.start_button_image, (600, 500))
-        self.exit_button_image = pygame.transform.scale(self.exit_button_image, (600, 500))
+        self.main_screen = pygame.image.load("./assets/main-screen.png").convert_alpha()
+        self.winner_screen = pygame.image.load("./assets/winner-screen.png").convert_alpha()
+        self.gameover_screen = pygame.image.load("./assets/gameover-screen.png").convert_alpha()
 
-    def draw_initial_screen(self, game_status=None, score=None):
-        self.screen.blit(self.original_image, (0, 0))
+        self.start_button = pygame.image.load("./assets/start-button.png").convert_alpha()
+        self.exit_button = pygame.image.load("./assets/exit-button.png").convert_alpha()
+        self.winner_play_again = pygame.image.load("./assets/win-play-again.png").convert_alpha()
+        self.winner_exit = pygame.image.load("./assets/win-exit.png").convert_alpha()
+        self.fail_play_again = pygame.image.load("./assets/retry-button.png").convert_alpha()
+        self.fail_exit = pygame.image.load("./assets/exit-button.png").convert_alpha()
+
+        self.timer_bg = pygame.image.load("./assets/timer_backgoround.png").convert_alpha()
+
+        self.start_button = pygame.transform.scale(self.start_button, (210, 80))
+        self.exit_button = pygame.transform.scale(self.exit_button, (210, 80))
+        self.winner_play_again = pygame.transform.scale(self.winner_play_again, (80, 80))
+        self.winner_exit = pygame.transform.scale(self.winner_exit, (80, 80))
+        self.fail_play_again = pygame.transform.scale(self.fail_play_again, (210, 80))
+        self.fail_exit = pygame.transform.scale(self.fail_exit, (210, 80))
+
+    def draw_initial_screen(self, game_status=None, score=None, score_position=None):
+        screen_width, screen_height = self.screen.get_width(), self.screen.get_height()
+
+        if game_status == "success":
+            self.screen.blit(pygame.transform.scale(self.winner_screen, (screen_width, screen_height)), (0, 0))
+            start_button_image = self.winner_play_again
+            start_button_rect = start_button_image.get_rect(center=(screen_width // 2 - 80, screen_height // 2 + 100))
+            self.screen.blit(start_button_image, start_button_rect)
+            exit_button_image = self.winner_exit
+            exit_button_rect = exit_button_image.get_rect(center=(screen_width // 2 + 80, screen_height // 2 + 100))
+            self.screen.blit(exit_button_image, exit_button_rect)
+            
+        elif game_status == "fail":
+            self.screen.blit(pygame.transform.scale(self.gameover_screen, (screen_width, screen_height)), (0, 0))
+            start_button_image = self.fail_play_again
+            exit_button_image = self.fail_exit
+        else:
+            self.screen.blit(pygame.transform.scale(self.main_screen, (screen_width, screen_height)), (0, 0))
+            start_button_image = self.start_button
+            exit_button_image = self.exit_button
 
         if game_status == "success" and score is not None:
-            result_text = self.font_info.render(f"Selamat! Skor Anda: {score}", True, (255, 255, 255))
-            result_rect = result_text.get_rect(center=(self.screen.get_width() // 2, 200))
-            self.screen.blit(result_text, result_rect)
-        elif game_status == "fail":
-            result_text = self.font_info.render("Game Over!", True, (255, 255, 255))
-            result_rect = result_text.get_rect(center=(self.screen.get_width() // 2, 200))
-            self.screen.blit(result_text, result_rect)
+            score_text = self.font_score.render(str(score), True, (139,	106, 72))
+            if score_position is None:
+                score_rect = score_text.get_rect(center=(screen_width // 2, screen_height // 2))
+            else:
+                score_rect = score_text.get_rect(center=score_position)
+            self.screen.blit(score_text, score_rect)
 
-        start_button_rect = self.start_button_image.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() // 2 + 50))
-        self.screen.blit(self.start_button_image, start_button_rect)
+        if game_status != "success":
+            start_button_rect = start_button_image.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() // 2 ))
+            self.screen.blit(start_button_image, start_button_rect)
 
-        exit_button_rect = self.exit_button_image.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() // 2 + 140))
-        self.screen.blit(self.exit_button_image, exit_button_rect)
+            exit_button_rect = exit_button_image.get_rect(center=(screen_width // 2, screen_height // 2 + 100))
+            self.screen.blit(exit_button_image, exit_button_rect)
 
         pygame.display.flip()
         return start_button_rect, exit_button_rect
-
-    def draw_result_screen(self, message, score):
-        overlay = pygame.Surface(self.screen.get_size())
-        overlay.set_alpha(128)
-        overlay.fill((0, 0, 0))
-        self.screen.blit(overlay, (0, 0))
-
-        card_width = 600
-        card_height = 400
-        card_x = (self.screen.get_width() - card_width) // 2
-        card_y = (self.screen.get_height() - card_height) // 2
-        pygame.draw.rect(self.screen, (105, 105, 105), (card_x, card_y, card_width, card_height))
-
-        title_text = self.font_title.render(f"{message} Skor Anda: {score}", True, (210, 180, 140))
-        text_rect = title_text.get_rect(center=(self.screen.get_width() // 2, card_y + 100))
-        self.screen.blit(title_text, text_rect)
-
-        play_again_button = pygame.Rect(card_x + 75, card_y + 200, 450, 70)
-        pygame.draw.rect(self.screen, (139, 69, 19), play_again_button)
-        play_again_text = self.font_title.render("Main Lagi", True, (255, 255, 255))
-        text_rect = play_again_text.get_rect(center=play_again_button.center)
-        self.screen.blit(play_again_text, text_rect)
-
-        exit_button = pygame.Rect(card_x + 125, card_y + 300, 350, 70)
-        pygame.draw.rect(self.screen, (139, 69, 19), exit_button)
-        exit_text = self.font_title.render("Keluar", True, (255, 255, 255))
-        text_rect = exit_text.get_rect(center=exit_button.center)
-        self.screen.blit(exit_text, text_rect)
-
-        pygame.display.flip()
-        return play_again_button, exit_button
-
+    
     def draw_timer(self, time_left):
-        timer_text = self.font_info.render(f"Waktu: {time_left}", True, (255, 255, 255))
-        self.screen.blit(timer_text, (10, 10))
+        timer_text = self.font_timer.render(f"waktu: {time_left} detik", True, (255, 255, 255))
+        timer_rect = timer_text.get_rect(topleft=(10, 10))
+        timer_bg_new = pygame.transform.scale(self.timer_bg, (timer_rect.width + 20, timer_rect.height + 20))
+        self.screen.blit(timer_bg_new, (timer_rect.x - 10, timer_rect.y - 10))
+        self.screen.blit(timer_text, timer_rect)
+
+    def draw_map_overlay(self, map_image, time_left):
+        self.screen.blit(pygame.transform.scale(map_image, (self.screen.get_width(), self.screen.get_height())), (0, -10))
+        timer_text = self.font_timer.render(f"{time_left}", True, (255, 255, 255))
+        self.screen.blit(timer_text, (map_image.get_width() + 10, 10))
+        pygame.display.flip()
