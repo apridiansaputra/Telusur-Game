@@ -24,7 +24,8 @@ Game ini diberi nama “TELUSUR” , merupakan sebuah permainan yang mengambil i
 
 ## 📚Libraries
 
-coming soon
+- [Python 3.11](https://www.python.org/)
+- [Pygame](https://www.pygame.org/)
 
 ## 🎮Cara Bermain
 
@@ -50,13 +51,9 @@ mengambil kunci terlebih dahulu sebagai syarat keluar dari labirin. Jika waktu b
 
 | Nama                    | NIM       | Peran |
 | ----------------------- | --------- | ----- |
-| Ridho Lailatul Akbar    | 122140136 | -     |
-| Apridian Saputra        | 122140143 | -     |
-| Shintya Ayu Wardani     | 122140138 | -     |
-| Keti Azura              | 122140139 | -     |
-| Rustian Afencius Marbun | 122140155 | -     |
-| Robby Bangsawan         | 120140190 | -     |
-
-## ⚓Referensi
-
-coming soon
+| Ridho Lailatul Akbar    | 122140136 | Programmer     |
+| Apridian Saputra        | 122140143 | Programmer     |
+| Shintya Ayu Wardani     | 122140138 | Design Assets     |
+| Keti Azura              | 122140139 | Design Assets     |
+| Rustian Afencius Marbun | 122140155 | Programmer     |
+| Robby Bangsawan         | 120140190 | Programmer     |
